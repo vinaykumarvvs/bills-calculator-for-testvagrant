@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+}
+
+group 'com.testvagrant'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile('org.apache.poi:poi:3.13')
+    compile('org.apache.poi:poi-ooxml:3.13')
+}
+
+task createJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Non Payroll Bills Calculator',
+                'Implementation-Version': version,
+                'Main-Class': 'NonPayRollBillCalculatorForAnEmp'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}

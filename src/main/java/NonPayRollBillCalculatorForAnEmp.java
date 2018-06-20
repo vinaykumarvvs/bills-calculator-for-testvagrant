@@ -75,7 +75,7 @@ public class NonPayRollBillCalculatorForAnEmp {
                         )
                         .mapToDouble(NonPayRollBill::getAmount).sum();
 
-                String msg = checkEligibleOrNot(singleEmployeeList, total, ExpenseCategory.Non_Payroll_Broadband, broadbandDatesList);
+                String msg = calculateAmountForBroadbandAndHealth(singleEmployeeList, total, ExpenseCategory.Non_Payroll_Broadband, broadbandDatesList);
                 total = msg.contains(":") ? Float.parseFloat(msg.split(":")[0]) : Float.parseFloat(msg);
                 singleEmployeeList.removeIf(emp -> emp.getCategory().equals(category));
 
@@ -96,7 +96,7 @@ public class NonPayRollBillCalculatorForAnEmp {
                         )
                         .mapToDouble(NonPayRollBill::getAmount).sum();
 
-                String msg = checkEligibleOrNot(singleEmployeeList, total, ExpenseCategory.Non_Payroll_Health_And_Wellness, healthAndWellnessDatesList);
+                String msg = calculateAmountForBroadbandAndHealth(singleEmployeeList, total, ExpenseCategory.Non_Payroll_Health_And_Wellness, healthAndWellnessDatesList);
                 total = msg.contains(":") ? Float.parseFloat(msg.split(":")[0]) : Float.parseFloat(msg);
 
                 singleEmployeeList.removeIf(emp -> emp.getCategory().equals(category));
@@ -284,7 +284,7 @@ public class NonPayRollBillCalculatorForAnEmp {
         }
     }
 
-    private String checkEligibleOrNot(List<NonPayRollBill> singleEmployeeList, double total, ExpenseCategory expenseCategory, List<Date> datesList) {
+    private String calculateAmountForBroadbandAndHealth(List<NonPayRollBill> singleEmployeeList, double total, ExpenseCategory expenseCategory, List<Date> datesList) {
         String email = singleEmployeeList.get(0).getEmail();
         try {
             if (expenseCategory == ExpenseCategory.Non_Payroll_Health_And_Wellness)
@@ -296,4 +296,5 @@ public class NonPayRollBillCalculatorForAnEmp {
         }
         return "";
     }
+
 }

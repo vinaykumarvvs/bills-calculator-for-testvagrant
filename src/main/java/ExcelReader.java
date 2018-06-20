@@ -80,9 +80,9 @@ public class ExcelReader {
 
     private int getCellNumberBasedOnClaimedDate(ExpenseCategory expenseCategory) {
         if (expenseCategory == ExpenseCategory.Non_Payroll_Health_And_Wellness)
-            return 4;
-        else if (expenseCategory == ExpenseCategory.Non_Payroll_Broadband)
             return 5;
+        else if (expenseCategory == ExpenseCategory.Non_Payroll_Broadband)
+            return 6;
         return 0;
     }
 
@@ -160,23 +160,32 @@ public class ExcelReader {
 
         while (startingRow < endingRow) {
             if (sheet.getRow(startingRow).getCell(0).toString().equals(email)) {
-                String activationDate = sheet.getRow(startingRow).getCell(3).toString();
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                Date date = null;
-                try {
-                    date = simpleDateFormat.parse(activationDate);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                long oneYear = (new Date().getTime() - date.getTime()) / (24 * 60 * 60 * 1000);
-                if (oneYear / (float) 365 > 1) {
-                    Calendar c = Calendar.getInstance();
-                    c.setTime(date);
-                    c.add(Calendar.DATE, 365);
-                    sheet.getRow(startingRow).getCell(1).setCellValue(6000);
-                    sheet.getRow(startingRow).getCell(2).setCellValue(12000);
-                    sheet.getRow(startingRow).getCell(3).setCellValue(simpleDateFormat.format(c.getTime()));
-                    closeExcelFile();
+                for (int columnNum = 1; columnNum < 3; columnNum++) {
+
+                    String dateFromExcel = sheet.getRow(startingRow).getCell(columnNum + 2).toString();
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                    Date date = null;
+                    try {
+                        date = simpleDateFormat.parse(dateFromExcel);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    long oneYear = (new Date().getTime() - date.getTime()) / (24 * 60 * 60 * 1000);
+                    if (oneYear / (float) 365 > 1) {
+                        Calendar c = Calendar.getInstance();
+                        c.setTime(date);
+                        c.add(Calendar.DATE, 365);
+
+                        if (columnNum == 1) {
+                            sheet.getRow(startingRow).getCell(columnNum).setCellValue(6000);
+                            sheet.getRow(startingRow).getCell(columnNum + 2).setCellValue(simpleDateFormat.format(c.getTime()));
+                        } else {
+                            sheet.getRow(startingRow).getCell(columnNum).setCellValue(12000);
+                            sheet.getRow(startingRow).getCell(columnNum + 2).setCellValue(simpleDateFormat.format(c.getTime()));
+                        }
+                        closeExcelFile();
+                    }
                 }
             }
 

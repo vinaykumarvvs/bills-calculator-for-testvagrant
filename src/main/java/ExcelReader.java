@@ -31,12 +31,12 @@ public class ExcelReader {
         sheet = workbook.getSheetAt(0);
     }
 
-    public List<NonPayRollBill> getAllEmployeesBillDetails(int year, int month) {
+    public List<BillDetails> getAllEmployeesBillDetails(int year, int month) {
 
         int startingRow = sheet.getFirstRowNum() + 1;
         int endingRow = sheet.getLastRowNum() + 1;
 
-        List<NonPayRollBill> empList = new ArrayList<>();
+        List<BillDetails> empList = new ArrayList<>();
         String email, expenseCategory;
         Date timestamp;
         float amount;
@@ -51,7 +51,7 @@ public class ExcelReader {
                 sheet.getRow(startingRow).getCell(4).setCellType(Cell.CELL_TYPE_NUMERIC);
                 amount = Float.parseFloat(sheet.getRow(startingRow).getCell(4).toString());
 
-                empList.add(new NonPayRollBillBuilder()
+                empList.add(new BillDetailsBuilder()
                         .withDate(timestamp)
                         .withEmail(email)
                         .withCategory(expenseCategory)

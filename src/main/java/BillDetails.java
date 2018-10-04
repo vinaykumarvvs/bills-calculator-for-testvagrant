@@ -1,6 +1,6 @@
 import java.util.Date;
 
-public class NonPayRollBill {
+public class BillDetails {
 
     private String email;
     private Date date;

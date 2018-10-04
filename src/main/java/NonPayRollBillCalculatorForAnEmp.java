@@ -18,6 +18,8 @@ public class NonPayRollBillCalculatorForAnEmp {
         int month = nonPayRollBillCalculatorForAnEmp.readMonth(in);
 
         nonPayRollBillCalculatorForAnEmp.readReimbursementsForThisEmp(fileName, email, year, month);
+        System.out.println("Press any key to exit ...");
+        System.console().readLine();
     }
 
     private String readFileName(Scanner in) {
@@ -43,12 +45,12 @@ public class NonPayRollBillCalculatorForAnEmp {
     private void readReimbursementsForThisEmp(String fileName, String email, int year, int month) throws IOException {
         List<NonPayRollBill> empList = new ExcelReader(fileName).getAllEmployeesBillDetails(year, month);
         if (email.contains("@"))
-            calculateBillsBasedOnEmail(email, empList);
+            calculateBillBasedOnEmail(email, empList);
         else
             calculateAllEmpBills(empList);
     }
 
-    private void calculateBillsBasedOnEmail(String email, List<NonPayRollBill> empList) {
+    private void calculateBillBasedOnEmail(String email, List<NonPayRollBill> empList) {
 
         System.out.println("============================================================");
         System.out.format("Employee : %s ", email);
@@ -75,18 +77,17 @@ public class NonPayRollBillCalculatorForAnEmp {
                         )
                         .mapToDouble(NonPayRollBill::getAmount).sum();
 
-                String msg = calculateAmountForBroadbandAndHealth(singleEmployeeList, total, ExpenseCategory.Non_Payroll_Broadband, broadbandDatesList);
-                total = msg.contains(":") ? Float.parseFloat(msg.split(":")[0]) : Float.parseFloat(msg);
+                total = calculateAmountForBroadbandAndHealth(singleEmployeeList, total, ExpenseCategory.Non_Payroll_Broadband, broadbandDatesList);
                 singleEmployeeList.removeIf(emp -> emp.getCategory().equals(category));
 
                 if (total == 0)
                     System.out.println(ExpenseCategory.Non_Payroll_Broadband.toString() + " : " + total +
-                            " ( The amount " + Float.parseFloat(msg.split(":")[1]) +" is already claimed or no sufficient balance is left )");
+                            " ( In Sufficient Balance )");
                 else
                     System.out.println(ExpenseCategory.Non_Payroll_Broadband.toString() + " : " + total);
 
-                totalAmountList.add(total);
                 nonPayrollAmountList.add(total);
+//                totalAmountList.add(total);
 
             } else if (ExpenseCategory.Non_Payroll_Health_And_Wellness.toString().equals(category)) {
                 double total = singleEmployeeList.stream()
@@ -96,18 +97,17 @@ public class NonPayRollBillCalculatorForAnEmp {
                         )
                         .mapToDouble(NonPayRollBill::getAmount).sum();
 
-                String msg = calculateAmountForBroadbandAndHealth(singleEmployeeList, total, ExpenseCategory.Non_Payroll_Health_And_Wellness, healthAndWellnessDatesList);
-                total = msg.contains(":") ? Float.parseFloat(msg.split(":")[0]) : Float.parseFloat(msg);
-
+                total = calculateAmountForBroadbandAndHealth(singleEmployeeList, total, ExpenseCategory.Non_Payroll_Health_And_Wellness, healthAndWellnessDatesList);
                 singleEmployeeList.removeIf(emp -> emp.getCategory().equals(category));
+
                 if (total == 0)
                     System.out.println(ExpenseCategory.Non_Payroll_Health_And_Wellness.toString() + " : " + total +
-                            " ( The amount " + Float.parseFloat(msg.split(":")[1]) +" is already claimed or no sufficient balance is left )");
+                            " ( In Sufficient Balance )");
                 else
                     System.out.println(ExpenseCategory.Non_Payroll_Health_And_Wellness.toString() + " : " + total);
 
-                totalAmountList.add(total);
                 nonPayrollAmountList.add(total);
+//                totalAmountList.add(total);
 
             } else if (ExpenseCategory.Non_Payroll_CABS.toString().equals(category)) {
                 double total = singleEmployeeList.stream()
@@ -116,8 +116,8 @@ public class NonPayRollBillCalculatorForAnEmp {
 
                 singleEmployeeList.removeIf(emp -> emp.getCategory().equals(category));
                 System.out.println(ExpenseCategory.Non_Payroll_CABS.toString() + " : " + total);
-                totalAmountList.add(total);
                 nonPayrollAmountList.add(total);
+//                totalAmountList.add(total);
 
             } else if (ExpenseCategory.Non_Payroll_Office_Lunch_And_Snacks.toString().equals(category)) {
                 double total = (float) singleEmployeeList.stream()
@@ -126,8 +126,8 @@ public class NonPayRollBillCalculatorForAnEmp {
 
                 singleEmployeeList.removeIf(emp -> emp.getCategory().equals(category));
                 System.out.println(ExpenseCategory.Non_Payroll_Office_Lunch_And_Snacks.toString() + " : " + total);
-                totalAmountList.add(total);
                 nonPayrollAmountList.add(total);
+//                totalAmountList.add(total);
 
             } else if (ExpenseCategory.Non_Payroll_Office_Tea_And_Coffee.toString().equals(category)) {
                 double total = singleEmployeeList.stream()
@@ -136,8 +136,8 @@ public class NonPayRollBillCalculatorForAnEmp {
 
                 singleEmployeeList.removeIf(emp -> emp.getCategory().equals(category));
                 System.out.println(ExpenseCategory.Non_Payroll_Office_Tea_And_Coffee.toString() + " : " + total);
-                totalAmountList.add(total);
                 nonPayrollAmountList.add(total);
+//                totalAmountList.add(total);
 
             } else if (ExpenseCategory.Non_Payroll_Office_Broadband.toString().equals(category)) {
                 double total = singleEmployeeList.stream()
@@ -146,8 +146,8 @@ public class NonPayRollBillCalculatorForAnEmp {
 
                 singleEmployeeList.removeIf(emp -> emp.getCategory().equals(category));
                 System.out.println(ExpenseCategory.Non_Payroll_Office_Broadband.toString() + " : " + total);
-                totalAmountList.add(total);
                 nonPayrollAmountList.add(total);
+//                totalAmountList.add(total);
 
             } else if (ExpenseCategory.Non_Payroll_Office_Electricity.toString().equals(category)) {
                 double total = singleEmployeeList.stream()
@@ -156,8 +156,8 @@ public class NonPayRollBillCalculatorForAnEmp {
 
                 singleEmployeeList.removeIf(emp -> emp.getCategory().equals(category));
                 System.out.println(ExpenseCategory.Non_Payroll_Office_Electricity.toString() + " : " + total);
-                totalAmountList.add(total);
                 nonPayrollAmountList.add(total);
+//                totalAmountList.add(total);
 
             } else if (ExpenseCategory.Non_Payroll_Office_Domain.toString().equals(category)) {
                 double total = singleEmployeeList.stream()
@@ -166,8 +166,8 @@ public class NonPayRollBillCalculatorForAnEmp {
 
                 singleEmployeeList.removeIf(emp -> emp.getCategory().equals(category));
                 System.out.println(ExpenseCategory.Non_Payroll_Office_Domain.toString() + " : " + total);
-                totalAmountList.add(total);
                 nonPayrollAmountList.add(total);
+//                totalAmountList.add(total);
 
             } else if (ExpenseCategory.Non_Payroll_Office_Maintainance.toString().equals(category)) {
                 double total = singleEmployeeList.stream()
@@ -176,8 +176,8 @@ public class NonPayRollBillCalculatorForAnEmp {
 
                 singleEmployeeList.removeIf(emp -> emp.getCategory().equals(category));
                 System.out.println(ExpenseCategory.Non_Payroll_Office_Maintainance.toString() + " : " + total);
-                totalAmountList.add(total);
                 nonPayrollAmountList.add(total);
+//                totalAmountList.add(total);
 
             } else if (ExpenseCategory.Non_Payroll_Office_Team_Outing.toString().equals(category)) {
                 double total = singleEmployeeList.stream()
@@ -186,8 +186,8 @@ public class NonPayRollBillCalculatorForAnEmp {
 
                 singleEmployeeList.removeIf(emp -> emp.getCategory().equals(category));
                 System.out.println(ExpenseCategory.Non_Payroll_Office_Team_Outing.toString() + " : " + total);
-                totalAmountList.add(total);
                 nonPayrollAmountList.add(total);
+//                totalAmountList.add(total);
 
             } else if (ExpenseCategory.Non_Payroll_Office_Hardware_And_Software.toString().equals(category)) {
                 double total = singleEmployeeList.stream()
@@ -196,8 +196,8 @@ public class NonPayRollBillCalculatorForAnEmp {
 
                 singleEmployeeList.removeIf(emp -> emp.getCategory().equals(category));
                 System.out.println(ExpenseCategory.Non_Payroll_Office_Hardware_And_Software.toString() + " : " + total);
-                totalAmountList.add(total);
                 nonPayrollAmountList.add(total);
+//                totalAmountList.add(total);
 
             } else if (ExpenseCategory.Non_Payroll_Onsite_Travel.toString().equals(category)) {
                 double total = singleEmployeeList.stream()
@@ -206,8 +206,8 @@ public class NonPayRollBillCalculatorForAnEmp {
 
                 singleEmployeeList.removeIf(emp -> emp.getCategory().equals(category));
                 System.out.println(ExpenseCategory.Non_Payroll_Onsite_Travel.toString() + " : " + total);
-                totalAmountList.add(total);
                 nonPayrollAmountList.add(total);
+//                totalAmountList.add(total);
 
             } else if (ExpenseCategory.Non_Payroll_Training_And_Seminars.toString().equals(category)) {
                 double total = singleEmployeeList.stream()
@@ -216,8 +216,8 @@ public class NonPayRollBillCalculatorForAnEmp {
 
                 singleEmployeeList.removeIf(emp -> emp.getCategory().equals(category));
                 System.out.println(ExpenseCategory.Non_Payroll_Training_And_Seminars.toString() + " : " + total);
-                totalAmountList.add(total);
                 nonPayrollAmountList.add(total);
+//                totalAmountList.add(total);
 
             } else if (ExpenseCategory.Non_Payroll_Domestic_Travel.toString().equals(category)) {
                 double total = singleEmployeeList.stream()
@@ -226,8 +226,8 @@ public class NonPayRollBillCalculatorForAnEmp {
 
                 singleEmployeeList.removeIf(emp -> emp.getCategory().equals(category));
                 System.out.println(ExpenseCategory.Non_Payroll_Domestic_Travel.toString() + " : " + total);
-                totalAmountList.add(total);
                 nonPayrollAmountList.add(total);
+//                totalAmountList.add(total);
 
             } else if (ExpenseCategory.Payroll_Books_And_Periodicals.toString().equals(category)) {
                 double total = singleEmployeeList.stream()
@@ -236,7 +236,7 @@ public class NonPayRollBillCalculatorForAnEmp {
 
                 singleEmployeeList.removeIf(emp -> emp.getCategory().equals(category));
 //                System.out.println(ExpenseCategory.Payroll_Books_And_Periodicals.toString() + " : " + total);
-                totalAmountList.add(total);
+//                totalAmountList.add(total);
 //                payrollAmountList.add(total);
 
             } else if (ExpenseCategory.Payroll_Medical.toString().equals(category)) {
@@ -246,7 +246,7 @@ public class NonPayRollBillCalculatorForAnEmp {
 
                 singleEmployeeList.removeIf(emp -> emp.getCategory().equals(category));
 //                System.out.println(ExpenseCategory.Payroll_Medical.toString() + " : " + total);
-                totalAmountList.add(total);
+//                totalAmountList.add(total);
 //                payrollAmountList.add(total);
 
             } else if (ExpenseCategory.Payroll_Mobile.toString().equals(category)) {
@@ -256,7 +256,7 @@ public class NonPayRollBillCalculatorForAnEmp {
 
                 singleEmployeeList.removeIf(emp -> emp.getCategory().equals(category));
 //                System.out.println(ExpenseCategory.Payroll_Mobile.toString() + " : " + total);
-                totalAmountList.add(total);
+//                totalAmountList.add(total);
 //                payrollAmountList.add(total);
 
             }
@@ -279,12 +279,12 @@ public class NonPayRollBillCalculatorForAnEmp {
     private void calculateAllEmpBills(List<NonPayRollBill> empList) {
         while (empList.size() != 0) {
             String email = empList.get(0).getEmail();
-            calculateBillsBasedOnEmail(email, empList);
+            calculateBillBasedOnEmail(email, empList);
             empList.removeIf(emp -> emp.getEmail().equals(email));
         }
     }
 
-    private String calculateAmountForBroadbandAndHealth(List<NonPayRollBill> singleEmployeeList, double total, ExpenseCategory expenseCategory, List<Date> datesList) {
+    private float calculateAmountForBroadbandAndHealth(List<NonPayRollBill> singleEmployeeList, double total, ExpenseCategory expenseCategory, List<Date> datesList) {
         String email = singleEmployeeList.get(0).getEmail();
         try {
             if (expenseCategory == ExpenseCategory.Non_Payroll_Health_And_Wellness)
@@ -294,7 +294,7 @@ public class NonPayRollBillCalculatorForAnEmp {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "";
+        return 0;
     }
 
 }

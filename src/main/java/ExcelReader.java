@@ -86,7 +86,7 @@ public class ExcelReader {
         return 0;
     }
 
-    public String checkEligibilityForHealthAndBroadband(String email, double claimedAmount, ExpenseCategory expenseCategory, List<Date> datesList) {
+    public float checkEligibilityForHealthAndBroadband(String email, double claimedAmount, ExpenseCategory expenseCategory, List<Date> datesList) {
         int cellNumber = getCellNumberBasedOnExpenseCategory(expenseCategory);
         int startingRow = sheet.getFirstRowNum() + 1;
         int endingRow = sheet.getLastRowNum() + 1;
@@ -113,10 +113,10 @@ public class ExcelReader {
             updateHealthOrBroadbandValueInExcel(sheet, email, 0, cellNumber);
         }
 
-        if (claimedAmountAfterVerification == 0)
-            return String.valueOf(claimedAmountAfterVerification) + ":" + String.valueOf(claimedAmount);
+        if (!amountShouldBeClaimedOrNot)
+            return (float) claimedAmount;
         else
-            return String.valueOf(claimedAmountAfterVerification);
+            return claimedAmountAfterVerification;
     }
 
     private boolean checkAmountIsClaimedOrNot(Row row, List<Date> datesList, ExpenseCategory expenseCategory) {
